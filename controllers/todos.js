@@ -1,54 +1,52 @@
-const Todos = require('../models/Todos')
+const Data = require('../models/Todos')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
 const getAllTodos = async (req, res) => {
-  const todos = await Todos.find({ createdBy: req.user.userId }).sort(
-    'createdAt'
-  )
-  res.status(200).json({ todos, count: todos.length })
+  const d = await Data.find({ createdBy: req.user.userId }).sort('createdAt')
+  res.status(200).json({ d, count: d.length })
 }
 
 const createTodos = async (req, res) => {
   req.body.createdBy = req.user.userId
-  const todos = await Todos.create(req.body)
-  res.status(StatusCodes.CREATED).json({ todos })
+  const d = await Data.create(req.body)
+  res.status(StatusCodes.CREATED).json({ d })
 }
 
 const getTodos = async (req, res) => {
   const {
     user: { userId },
-    params: { id: todoId },
+    params: { id: dataId },
   } = req
-  const todo = await Todos.findOne({
-    _id: todoId,
+  const d = await Data.findOne({
+    _id: dataId,
     createdBy: userId,
   })
-  if (!todo) {
-    throw new NotFoundError(`No Todo with id ${todoId}`)
+  if (!d) {
+    throw new NotFoundError(`No Todo with id ${dataId}`)
   }
-  res.status(StatusCodes.OK).json({ todo })
+  res.status(StatusCodes.OK).json({ d })
 }
 
 const updateTodos = async (req, res) => {
   const {
-    body: { todo },
+    body: { title, description },
     user: { userId },
-    params: { id: todoId },
+    params: { id: dataId },
   } = req
-  if (todo === '') {
-    throw new BadRequestError('Todo fields cannot be empty')
+  if (title === '') {
+    throw new BadRequestError('Fields cannot be empty')
   }
-  const updateTodos = await Todos.findByIdAndUpdate(
+  const updateData = await Data.findByIdAndUpdate(
     {
-      _id: todoId,
+      _id: dataId,
       createdBy: userId,
     },
     req.body,
     { new: true, runValidators: true }
   )
   if (!updateTodos) {
-    throw new NotFoundError(`No Todo with id ${todoId}`)
+    throw new NotFoundError(`No data with id ${dataId}`)
   }
   res.status(StatusCodes.OK).json({ updateTodos })
 }
@@ -56,11 +54,14 @@ const updateTodos = async (req, res) => {
 const deleteTodos = async (req, res) => {
   const {
     user: { userId },
-    params: { id: todoId },
+    params: { id: dataId },
   } = req
-  const todo = await Todos.findByIdAndRemove({ _id: todoId, createdBy: userId })
-  if (!todo) {
-    throw new NotFoundError(`No Todo with id ${todoId}`)
+  const d = await Data.findByIdAndRemove({
+    _id: dataId,
+    createdBy: userId,
+  })
+  if (!d) {
+    throw new NotFoundError(`No Todo with id ${dataId}`)
   }
   res.status(StatusCodes.OK).send()
 }

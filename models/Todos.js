@@ -2,13 +2,19 @@ const mongoose = require('mongoose')
 
 const TodosSchema = new mongoose.Schema(
   {
-    todo: {
+    title: {
       type: String,
       required: [true, 'must provide text'],
       trim: true,
-      maxlength: [50, 'text can not be more than 50 characters'],
+      maxlength: 250,
     },
-    completed: {
+    description: {
+      type: String,
+      required: [true, 'must provide text'],
+      trim: true,
+      maxlength: 500,
+    },
+    status: {
       type: Boolean,
       default: false,
     },
@@ -21,4 +27,4 @@ const TodosSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-module.exports = mongoose.model('Todo', TodosSchema)
+module.exports = mongoose.model('Data', TodosSchema)
