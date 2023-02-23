@@ -48,7 +48,7 @@ const updateTodos = async (req, res) => {
   if (!updateTodos) {
     throw new NotFoundError(`No data with id ${dataId}`)
   }
-  res.status(StatusCodes.OK).json({ updateTodos })
+  res.status(StatusCodes.OK).json({ updateData })
 }
 
 const deleteTodos = async (req, res) => {
