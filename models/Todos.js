@@ -12,7 +12,7 @@ const TodosSchema = new mongoose.Schema(
       type: String,
       required: [true, 'must provide text'],
       trim: true,
-      maxlength: 500,
+      maxlength: 1000,
     },
     status: {
       type: Boolean,
